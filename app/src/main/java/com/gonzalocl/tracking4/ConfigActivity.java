@@ -23,8 +23,8 @@ public class ConfigActivity extends Activity {
 
         setContentView(R.layout.config);
 
-        Button btn_start = findViewById(R.id.button_start);
-        btn_start.setOnClickListener(new View.OnClickListener() {
+        Button btnStart = findViewById(R.id.button_start);
+        btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
