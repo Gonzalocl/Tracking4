@@ -16,4 +16,10 @@
     <string name="channel_description">number of points</string>
     <string name="kml_start"></string>
     <string name="mkl_end"></string>
+    <string name="err_storage_not_available">ERROR: Almacenamiento NO disponible</string>
+    <string name="err_failed_csv">ERROR: Fallo al crear la archivo csv</string>
+    <string name="err_failed_kml">ERROR: Fallo al crear la archivo kml</string>
+    <string name="tracks_dir">Tracks</string>
+    <string name="tracks_dir_success">Carpeta creada con exito</string>
+    <string name="documents_dir">Documents</string>
 </resources>
