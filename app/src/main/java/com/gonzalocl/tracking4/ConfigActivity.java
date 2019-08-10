@@ -60,14 +60,14 @@ public class ConfigActivity extends Activity {
                 settingsResponseTask.addOnSuccessListener(ConfigActivity.this, new OnSuccessListener<LocationSettingsResponse>() {
                     @Override
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-
+                        return;
                     }
                 });
 
                 settingsResponseTask.addOnFailureListener(ConfigActivity.this, new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
+                        return;
                     }
                 });
 
