@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class ConfigActivity extends Activity {
 
@@ -20,7 +21,14 @@ public class ConfigActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), TrackingInProgress.class);
-                // TODO get rate
+
+                EditText rate = findViewById(R.id.rate);
+                if ( rate.getText().toString().equals("") ) {
+                    TrackingApp.getTracking().setUpdate_rate(Integer.parseInt(getText(R.string.default_rate).toString()));
+                } else {
+                    TrackingApp.getTracking().setUpdate_rate(Integer.parseInt(rate.getText().toString()));
+                }
+
                 startActivity(intent);
             }
         });

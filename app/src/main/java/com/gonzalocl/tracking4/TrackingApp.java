@@ -1,16 +1,16 @@
 package com.gonzalocl.tracking4;
 
-public class Tracking {
+public class TrackingApp {
 
-    private static final Tracking tracking = new Tracking();
+    private static final TrackingApp tracking = new TrackingApp();
 
     private int update_rate;
 
-    private Tracking() {
+    private TrackingApp() {
 
     }
 
-    public static Tracking getTracking() {
+    public static TrackingApp getTracking() {
         return tracking;
     }
 

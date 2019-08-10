@@ -3,6 +3,7 @@ package com.gonzalocl.tracking4;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 public class TrackingInProgress extends Activity {
 
