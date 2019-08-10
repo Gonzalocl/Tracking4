@@ -10,10 +10,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import androidx.annotation.NonNull;
 
 public class ConfigActivity extends Activity {
 
@@ -28,8 +39,40 @@ public class ConfigActivity extends Activity {
             @Override
             public void onClick(View v) {
 
+                EditText rate = findViewById(R.id.rate);
+                if ( rate.getText().toString().equals("") ) {
+                    TrackingApp.getTracking().setUpdateRate(Integer.parseInt(getText(R.string.default_rate).toString()));
+                } else {
+                    TrackingApp.getTracking().setUpdateRate(Integer.parseInt(rate.getText().toString()));
+                }
+
+                LocationRequest locationRequest = LocationRequest.create();
+                locationRequest.setInterval(TrackingApp.getTracking().getUpdateRate()*1000);
+                locationRequest.setFastestInterval(TrackingApp.getTracking().getUpdateRate()*1000);
+                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+                LocationSettingsRequest.Builder settingsBuilder = new LocationSettingsRequest.Builder()
+                        .addLocationRequest(locationRequest);
+
+                SettingsClient settingsClient = LocationServices.getSettingsClient(ConfigActivity.this);
+                Task<LocationSettingsResponse> settingsResponseTask = settingsClient.checkLocationSettings(settingsBuilder.build());
+
+                settingsResponseTask.addOnSuccessListener(ConfigActivity.this, new OnSuccessListener<LocationSettingsResponse>() {
+                    @Override
+                    public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+
+                    }
+                });
+
+                settingsResponseTask.addOnFailureListener(ConfigActivity.this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
                 if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    Toast.makeText(v.getContext(), getText(R.string.err_storage_not_available).toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConfigActivity.this, getText(R.string.err_storage_not_available).toString(), Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -40,7 +83,7 @@ public class ConfigActivity extends Activity {
                     tracks_dir = new File(Environment.getExternalStoragePublicDirectory(getText(R.string.documents_dir).toString()), getText(R.string.tracks_dir).toString());
                 }
                 if (tracks_dir.mkdirs()) {
-                    Toast.makeText(v.getContext(), getText(R.string.tracks_dir_success).toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConfigActivity.this, getText(R.string.tracks_dir_success).toString(), Toast.LENGTH_LONG).show();
                 }
 
                 Date now = new Date();
@@ -62,22 +105,22 @@ public class ConfigActivity extends Activity {
 
                 try {
                     if (!csvFile.createNewFile()) {
-                        Toast.makeText(v.getContext(), getText(R.string.err_failed_csv).toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ConfigActivity.this, getText(R.string.err_failed_csv).toString(), Toast.LENGTH_LONG).show();
                         return;
                     }
                 } catch (IOException e) {
-                    Toast.makeText(v.getContext(), getText(R.string.err_failed_csv).toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConfigActivity.this, getText(R.string.err_failed_csv).toString(), Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                     return;
                 }
 
                 try {
                     if (!kmlFile.createNewFile()) {
-                        Toast.makeText(v.getContext(), getText(R.string.err_failed_kml).toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ConfigActivity.this, getText(R.string.err_failed_kml).toString(), Toast.LENGTH_LONG).show();
                         return;
                     }
                 } catch (IOException e) {
-                    Toast.makeText(v.getContext(), getText(R.string.err_failed_kml).toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConfigActivity.this, getText(R.string.err_failed_kml).toString(), Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                     return;
                 }
@@ -85,15 +128,7 @@ public class ConfigActivity extends Activity {
                 TrackingApp.getTracking().setCsvFile(csvFile);
                 TrackingApp.getTracking().setKmlFile(kmlFile);
 
-                Intent intent = new Intent(v.getContext(), TrackingInProgress.class);
-
-                EditText rate = findViewById(R.id.rate);
-                if ( rate.getText().toString().equals("") ) {
-                    TrackingApp.getTracking().setUpdateRate(Integer.parseInt(getText(R.string.default_rate).toString()));
-                } else {
-                    TrackingApp.getTracking().setUpdateRate(Integer.parseInt(rate.getText().toString()));
-                }
-
+                Intent intent = new Intent(ConfigActivity.this, TrackingInProgress.class);
                 startActivity(intent);
             }
         });
