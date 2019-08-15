@@ -2,14 +2,16 @@ package com.gonzalocl.tracking4;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -25,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class ConfigActivity extends Activity {
 
@@ -60,14 +63,20 @@ public class ConfigActivity extends Activity {
                 settingsResponseTask.addOnSuccessListener(ConfigActivity.this, new OnSuccessListener<LocationSettingsResponse>() {
                     @Override
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                        return;
                     }
                 });
 
                 settingsResponseTask.addOnFailureListener(ConfigActivity.this, new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        return;
+                        if (e instanceof ResolvableApiException) {
+                            try {
+                                ResolvableApiException resolvable = (ResolvableApiException) e;
+                                resolvable.startResolutionForResult(ConfigActivity.this, 25);
+                            } catch (IntentSender.SendIntentException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
                     }
                 });
 
