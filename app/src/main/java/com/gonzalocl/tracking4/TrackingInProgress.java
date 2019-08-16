@@ -35,7 +35,7 @@ public class TrackingInProgress extends Activity {
         kmlWriter = new KMLWriter(kmlFile);
 
 
-        LocationCallback locationCallback = new LocationCallback() {
+        final LocationCallback locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult == null) {
@@ -57,7 +57,7 @@ public class TrackingInProgress extends Activity {
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO remove updates
+                trackingApp.getFusedLocationProviderClient().removeLocationUpdates(locationCallback);
 
                 csvWriter.fin();
                 kmlWriter.fin();
