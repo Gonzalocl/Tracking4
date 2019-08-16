@@ -23,11 +23,11 @@
     <string name="tracks_dir_success">Carpeta creada con exito</string>
     <string name="documents_dir">Documents</string>
     <string name="str_distance">Distancia</string>
-    <string name="str_init_distance">0.0 km</string>
+    <string name="str_init_distance">0.00 km</string>
     <string name="str_time">Tiempo</string>
     <string name="str__init_time">00:00:00</string>
     <string name="str_speed">Velocidad actual</string>
     <string name="str_init_speed">0 km/h</string>
     <string name="str_average_speed">Velocidad media</string>
-    <string name="str_init_average_speed">0.0 km/h</string>
+    <string name="str_init_average_speed">0.00 km/h</string>
 </resources>

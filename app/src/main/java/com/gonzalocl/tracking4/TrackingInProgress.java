@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -24,6 +26,12 @@ public class TrackingInProgress extends Activity {
 
     private boolean updateUI;
 
+    private float totalDistance = 0;
+    private Location lastLocation = null;
+    private float speedSum = 0;
+    private int recordCount = 0;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +46,11 @@ public class TrackingInProgress extends Activity {
 
         updateUI = true;
 
+        final TextView displayDistance = findViewById(R.id.displayDistance);
+        final TextView displayTime = findViewById(R.id.displayTime);
+        final TextView displayAverageSpeed = findViewById(R.id.displayAverageSpeed);
+        final TextView displaySpeed = findViewById(R.id.displaySpeed);
+
         final LocationCallback locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -45,6 +58,7 @@ public class TrackingInProgress extends Activity {
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
+                    kmlWriter.newrec(location.getLatitude(), location.getLongitude());
                     csvWriter.newrec(
                             location.getLatitude(),
                             location.getLongitude(),
@@ -52,10 +66,21 @@ public class TrackingInProgress extends Activity {
                             location.getAccuracy(),
                             location.getTime()
                     );
-                    kmlWriter.newrec(location.getLatitude(), location.getLongitude());
+
+                    if (lastLocation != null) {
+                        totalDistance += location.distanceTo(lastLocation)/1000;
+                    }
+                    recordCount++;
+                    speedSum += location.getSpeed()*3.6;
+
                     if (updateUI) {
                         // TODO update ui and update in batch
+                        displayDistance.setText(String.format("%.2f km", totalDistance));
+                        displaySpeed.setText(String.format("%d km/h", (int) (location.getSpeed()*3.6)));
+                        displayAverageSpeed.setText(String.format("%.2f km/h", speedSum/recordCount));
                     }
+
+                    lastLocation = location;
                 }
             }
         };
@@ -85,6 +110,7 @@ public class TrackingInProgress extends Activity {
     protected void onResume() {
         super.onResume();
         updateUI = true;
+        // TODO update ui now
     }
 
     @Override
