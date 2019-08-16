@@ -1,5 +1,8 @@
 package com.gonzalocl.tracking4;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+
 import java.io.File;
 
 public class TrackingApp {
@@ -10,6 +13,9 @@ public class TrackingApp {
 
     private File csvFile;
     private File kmlFile;
+
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationRequest locationRequest;
 
     private TrackingApp() {
 
@@ -41,5 +47,21 @@ public class TrackingApp {
 
     public void setKmlFile(File kmlFile) {
         this.kmlFile = kmlFile;
+    }
+
+    public FusedLocationProviderClient getFusedLocationProviderClient() {
+        return fusedLocationProviderClient;
+    }
+
+    public void setFusedLocationProviderClient(FusedLocationProviderClient fusedLocationProviderClient) {
+        this.fusedLocationProviderClient = fusedLocationProviderClient;
+    }
+
+    public LocationRequest getLocationRequest() {
+        return locationRequest;
+    }
+
+    public void setLocationRequest(LocationRequest locationRequest) {
+        this.locationRequest = locationRequest;
     }
 }

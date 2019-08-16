@@ -54,7 +54,9 @@ public class ConfigActivity extends Activity {
                     return;
                 }
 
+                TrackingApp.getTracking().setFusedLocationProviderClient(LocationServices.getFusedLocationProviderClient(ConfigActivity.this));
                 LocationRequest locationRequest = LocationRequest.create();
+                TrackingApp.getTracking().setLocationRequest(locationRequest);
                 locationRequest.setInterval(TrackingApp.getTracking().getUpdateRate()*1000);
                 locationRequest.setFastestInterval(TrackingApp.getTracking().getUpdateRate()*1000);
                 locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
