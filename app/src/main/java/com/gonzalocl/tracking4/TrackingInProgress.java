@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,9 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class TrackingInProgress extends Activity {
 
@@ -31,6 +35,9 @@ public class TrackingInProgress extends Activity {
     private float speedSum = 0;
     private int recordCount = 0;
 
+    Timer timer;
+    TextView displayTime;
+    private long startTimeNanos;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +54,7 @@ public class TrackingInProgress extends Activity {
         updateUI = true;
 
         final TextView displayDistance = findViewById(R.id.displayDistance);
-        final TextView displayTime = findViewById(R.id.displayTime);
+        displayTime = findViewById(R.id.displayTime);
         final TextView displayAverageSpeed = findViewById(R.id.displayAverageSpeed);
         final TextView displaySpeed = findViewById(R.id.displaySpeed);
 
@@ -90,6 +97,9 @@ public class TrackingInProgress extends Activity {
                 null
         );
 
+        startTimer();
+        startTimeNanos = SystemClock.elapsedRealtimeNanos();
+
         Button btnStop = findViewById(R.id.button_stop);
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,20 +116,39 @@ public class TrackingInProgress extends Activity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
         updateUI = true;
+        startTimer();
         // TODO update ui now
         // TODO update location now
         // TODO unset update location in batch
-        // TODO set update timer
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         updateUI = false;
+        stopTimer();
         // TODO set update location in batch
-        // TODO unset update timer
     }
+
+    private void startTimer() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                long elapsedTimeNanos = SystemClock.elapsedRealtimeNanos() - startTimeNanos;
+                displayTime.setText(String.format("%02d:%02d:%02d",
+                        TimeUnit.NANOSECONDS.toHours(elapsedTimeNanos),
+                        TimeUnit.NANOSECONDS.toMinutes(elapsedTimeNanos) % TimeUnit.HOURS.toMinutes(1),
+                        TimeUnit.NANOSECONDS.toSeconds(elapsedTimeNanos) % TimeUnit.MINUTES.toSeconds(1)));
+            }
+        }, 0, 1000);
+    }
+
+    private void stopTimer() {
+        timer.cancel();
+    }
+
 }
