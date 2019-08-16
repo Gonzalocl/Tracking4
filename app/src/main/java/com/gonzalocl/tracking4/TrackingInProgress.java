@@ -110,13 +110,16 @@ public class TrackingInProgress extends Activity {
         super.onResume();
         updateUI = true;
         // TODO update ui now
-        // TODO set update in batch
-        // TODO update now
+        // TODO update location now
+        // TODO unset update location in batch
+        // TODO set update timer
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         updateUI = false;
+        // TODO set update location in batch
+        // TODO unset update timer
     }
 }
