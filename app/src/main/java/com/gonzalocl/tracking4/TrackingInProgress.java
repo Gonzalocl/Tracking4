@@ -74,7 +74,6 @@ public class TrackingInProgress extends Activity {
                     speedSum += location.getSpeed()*3.6;
 
                     if (updateUI) {
-                        // TODO update ui and update in batch
                         displayDistance.setText(String.format("%.2f km", totalDistance));
                         displaySpeed.setText(String.format("%d km/h", (int) (location.getSpeed()*3.6)));
                         displayAverageSpeed.setText(String.format("%.2f km/h", speedSum/recordCount));
@@ -111,6 +110,8 @@ public class TrackingInProgress extends Activity {
         super.onResume();
         updateUI = true;
         // TODO update ui now
+        // TODO set update in batch
+        // TODO update now
     }
 
     @Override
