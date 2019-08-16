@@ -22,6 +22,8 @@ public class TrackingInProgress extends Activity {
     private CSVWriter csvWriter;
     private KMLWriter kmlWriter;
 
+    private boolean updateUI;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,7 @@ public class TrackingInProgress extends Activity {
         csvWriter = new CSVWriter(csvFile);
         kmlWriter = new KMLWriter(kmlFile);
 
+        updateUI = true;
 
         final LocationCallback locationCallback = new LocationCallback() {
             @Override
@@ -50,6 +53,9 @@ public class TrackingInProgress extends Activity {
                             location.getTime()
                     );
                     kmlWriter.newrec(location.getLatitude(), location.getLongitude());
+                    if (updateUI) {
+                        // TODO
+                    }
                 }
             }
         };
@@ -73,5 +79,17 @@ public class TrackingInProgress extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUI = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        updateUI = false;
     }
 }
