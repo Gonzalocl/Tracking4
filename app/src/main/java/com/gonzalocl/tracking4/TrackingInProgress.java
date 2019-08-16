@@ -54,7 +54,7 @@ public class TrackingInProgress extends Activity {
                     );
                     kmlWriter.newrec(location.getLatitude(), location.getLongitude());
                     if (updateUI) {
-                        // TODO
+                        // TODO update ui and update in batch
                     }
                 }
             }
