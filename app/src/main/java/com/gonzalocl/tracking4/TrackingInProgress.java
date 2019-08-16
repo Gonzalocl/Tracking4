@@ -42,7 +42,14 @@ public class TrackingInProgress extends Activity {
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    // TODO
+                    csvWriter.newrec(
+                            location.getLatitude(),
+                            location.getLongitude(),
+                            location.getAltitude(),
+                            location.getAccuracy(),
+                            location.getTime()
+                    );
+                    kmlWriter.newrec(location.getLatitude(), location.getLongitude());
                 }
             }
         };
