@@ -81,9 +81,15 @@ public class TrackingInProgress extends Activity {
                     speedSum += location.getSpeed()*3.6;
 
                     if (updateUI) {
-                        displayDistance.setText(String.format("%.2f km", totalDistance));
-                        displaySpeed.setText(String.format("%d km/h", (int) (location.getSpeed()*3.6)));
-                        displayAverageSpeed.setText(String.format("%.2f km/h", speedSum/recordCount));
+                        final int currentSpeed = (int) (location.getSpeed()*3.6);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                displayDistance.setText(String.format("%.2f km", totalDistance));
+                                displaySpeed.setText(String.format("%d km/h", (int) (currentSpeed)));
+                                displayAverageSpeed.setText(String.format("%.2f km/h", speedSum/recordCount));
+                            }
+                        });
                     }
 
                     lastLocation = location;
@@ -139,10 +145,16 @@ public class TrackingInProgress extends Activity {
             @Override
             public void run() {
                 long elapsedTimeNanos = SystemClock.elapsedRealtimeNanos() - startTimeNanos;
-                displayTime.setText(String.format("%02d:%02d:%02d",
+                final String timeString = String.format("%02d:%02d:%02d",
                         TimeUnit.NANOSECONDS.toHours(elapsedTimeNanos),
                         TimeUnit.NANOSECONDS.toMinutes(elapsedTimeNanos) % TimeUnit.HOURS.toMinutes(1),
-                        TimeUnit.NANOSECONDS.toSeconds(elapsedTimeNanos) % TimeUnit.MINUTES.toSeconds(1)));
+                        TimeUnit.NANOSECONDS.toSeconds(elapsedTimeNanos) % TimeUnit.MINUTES.toSeconds(1));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        displayTime.setText(timeString);
+                    }
+                });
             }
         }, 0, 1000);
     }
